@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Game {
-    private final int GRID_SIZE = 10;
+    private final int GRID_SIZE = 5;
     private final int maxMoves;
     private final int targetJunks;
 

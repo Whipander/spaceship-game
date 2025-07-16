@@ -14,9 +14,6 @@ public class Spaceship {
         this.y = startY;
     }
 
-    public int getX() { return x; }
-    public int getY() { return y; }
-
     public void move(char direction, int gridSize) {
         switch (Character.toUpperCase(direction)) {
             case 'W': if (x > 0) x--; break;

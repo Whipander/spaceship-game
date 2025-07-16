@@ -1,8 +1,11 @@
+import lombok.Getter;
+
 import java.util.*;
+    @Getter
 
 public class Grid {
     private final int size;
-    private char[][] cells;
+    private final char[][] cells;
     private final Set<String> junkPositions = new HashSet<>();
     private final Random random = new Random();
 
@@ -54,10 +57,6 @@ public class Grid {
                 System.out.print(c + " ");
             System.out.println();
         }
-    }
-
-    public int getSize() {
-        return size;
     }
 
     public boolean allJunksCollected() {
