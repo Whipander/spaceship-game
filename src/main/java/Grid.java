@@ -1,53 +1,66 @@
-import lombok.*;
-
-import java.util.Arrays;
-import java.util.Random;
-
-@Getter
-@Setter
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
+import java.util.*;
 
 public class Grid {
-    private char[][] grid;
-    private int gridSize;
-    private int numberOfJunks;
+    private final int size;
+    private char[][] cells;
+    private final Set<String> junkPositions = new HashSet<>();
+    private final Random random = new Random();
 
-    public Grid(int gridSize, int numberOfJunks) {
-        this.gridSize = gridSize;
-        this.numberOfJunks = numberOfJunks;
-        createGrid();
-        generateRandomnJunks();
+    public Grid(int size) {
+        this.size = size;
+        this.cells = new char[size][size];
+        initializeGrid();
     }
 
-    public void createGrid() {
-        grid = new char[gridSize][gridSize];
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
-                grid[i][j] = '.';
+    public void initializeGrid() {
+        for (int i = 0; i < size; i++)
+            for (int j = 0; j < size; j++)
+                cells[i][j] = '.';
+    }
+
+    public void placeJunks(int spaceshipX, int spaceshipY, int numberOfJunks) {
+        junkPositions.clear();
+        while (junkPositions.size() < numberOfJunks) {
+            int x = random.nextInt(size);
+            int y = random.nextInt(size);
+            String pos = x + "," + y;
+            if ((x != spaceshipX || y != spaceshipY) && !junkPositions.contains(pos)) {
+                junkPositions.add(pos);
             }
         }
     }
 
-    public int getRandomCoordinate() {
-        Random r = new Random();
-        int low = 0;
-        int high = this.gridSize;
-        return r.nextInt(high - low) + low;
+    public boolean checkJunkCollected(int x, int y) {
+        String pos = x + "," + y;
+        if (junkPositions.contains(pos)) {
+            junkPositions.remove(pos);
+            return true;
+        }
+        return false;
     }
 
-    public void generateRandomnJunks(){
-        for (int i = 0; i < numberOfJunks; i++) {
-            int x = getRandomCoordinate();
-            int y = getRandomCoordinate();
-            grid[x][y] = 'J';
+    public void render(int spaceshipX, int spaceshipY) {
+        initializeGrid(); // clear grid
+        for (String pos : junkPositions) {
+            String[] parts = pos.split(",");
+            int x = Integer.parseInt(parts[0]);
+            int y = Integer.parseInt(parts[1]);
+            cells[x][y] = 'J';
+        }
+        cells[spaceshipX][spaceshipY] = 'S';
+
+        for (char[] row : cells) {
+            for (char c : row)
+                System.out.print(c + " ");
+            System.out.println();
         }
     }
 
-    public static void main(String[] args) {
-        Grid grid = new Grid(5, 5);
-        System.out.println(grid);
+    public int getSize() {
+        return size;
+    }
+
+    public boolean allJunksCollected() {
+        return junkPositions.isEmpty();
     }
 }
-
